@@ -1,0 +1,182 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-fraud" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fas fa-save"></i></button>
+        <button type="button" id="button-purge" form="form-purge" data-bs-toggle="tooltip" title="Delete All Data" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+        <a class="btn btn-light" data-bs-toggle="tooltip" href="{{ back }}" title="{{ button_back }}"><i class="fas fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fas fa-pencil-alt"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <div class="alert alert-info"><i class="fas fa-exclamation-circle"></i> {{ text_signup }}</div>
+        <form id="form-fraud" action="{{ save }}" method="post"  data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="fraud_fraudlabspro_status" id="input-status" class="form-select">
+                <option value="1"{% if fraud_fraudlabspro_status %} selected="selected"{% endif %}>{{ text_enabled }}</option>
+                <option value="0"{% if not fraud_fraudlabspro_status %} selected="selected"{% endif %}>{{ text_disabled }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-key">{{ entry_key }}</label>
+            <div class="col-sm-10">
+              <div class="input-group">
+                <input type="text" name="fraud_fraudlabspro_key" value="{{ fraud_fraudlabspro_key }}" id="input-key" placeholder="{{ entry_key }}" class="form-control"/>
+              </div>
+            </div>
+          </div>
+          <fieldset>
+            <legend>Rules Validation</legend>
+            <div class="alert alert-info">{{ text_rule_info }}</div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-fraud-review-status"><span data-toggle="tooltip" title="{{ help_review_status }}">{{ entry_review_status }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <select name="fraud_fraudlabspro_review_status_id" id="input-fraud-review-status" class="form-select">
+                  {% for order_status in order_statuses %}
+                    {% if order_status.order_status_id == fraud_fraudlabspro_review_status_id %}
+                      <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                    {% else %}
+                      <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-fraud-approve-status"><span data-toggle="tooltip" title="{{ help_approve_status }}">{{ entry_approve_status }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <select name="fraud_fraudlabspro_approve_status_id" id="input-fraud-approve-status" class="form-select">
+                  {% for order_status in order_statuses %}
+                    {% if order_status.order_status_id == fraud_fraudlabspro_approve_status_id %}
+                      <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                    {% else %}
+                      <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-fraud-reject-status"><span data-toggle="tooltip" title="{{ help_reject_status }}">{{ entry_reject_status }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <select name="fraud_fraudlabspro_reject_status_id" id="input-fraud-reject-status" class="form-select">
+                  {% for order_status in order_statuses %}
+                    {% if order_status.order_status_id == fraud_fraudlabspro_reject_status_id %}
+                      <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                    {% else %}
+                      <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Notification</legend>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-email-notify"><span data-toggle="tooltip" title="{{ help_email_notification }}">{{ entry_email_notification }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <div class="form-control" style="border-style:none; box-shadow:none;">Please login to the <a href="https://www.fraudlabspro.com/merchant/setting" target="_blank">merchant area</a> to configure the email notification. It is under the Settings page.</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-zapier-notify"><span data-toggle="tooltip" title="{{ help_zapier_notification }}">{{ entry_zapier_notification }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    {% if fraud_fraudlabspro_zapier_approve %}
+                    <input type="checkbox" name="fraud_fraudlabspro_zapier_approve" value="1" checked="checked" />
+                    {{ text_zapier_approve }}
+                    {% else %}
+                    <input type="checkbox" name="fraud_fraudlabspro_zapier_approve" value="1" />
+                    {{ text_zapier_approve }}
+                    {% endif %}
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    {% if fraud_fraudlabspro_zapier_review %}
+                    <input type="checkbox" name="fraud_fraudlabspro_zapier_review" value="1" checked="checked" />
+                    {{ text_zapier_review }}
+                    {% else %}
+                    <input type="checkbox" name="fraud_fraudlabspro_zapier_review" value="1" />
+                    {{ text_zapier_review }}
+                    {% endif %}
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    {% if fraud_fraudlabspro_zapier_reject %}
+                    <input type="checkbox" name="fraud_fraudlabspro_zapier_reject" value="1" checked="checked" />
+                    {{ text_zapier_reject }}
+                    {% else %}
+                    <input type="checkbox" name="fraud_fraudlabspro_zapier_reject" value="1" />
+                    {{ text_zapier_reject }}
+                    {% endif %}
+                  </label>
+                </div>
+                <div class="form-control" style="border-style:none; box-shadow:none;">You can visit <a href="https://www.fraudlabspro.com/resources/tutorials/how-to-enable-notification-using-zapier-in-opencart" target="_blank">https://www.fraudlabspro.com/resources/tutorials/how-to-enable-notification-using-zapier-in-opencart</a> for details about how to enable the Zap.</div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Testing Purpose</legend>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-ip"><span data-toggle="tooltip" title="{{ help_simulate_ip }}">{{ entry_simulate_ip }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <input type="text" name="fraud_fraudlabspro_simulate_ip" value="{{ fraud_fraudlabspro_simulate_ip }}" placeholder="{{ entry_simulate_ip }}" id="input-ip" class="form-control" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-debug-status"><span data-toggle="tooltip" title="{{ help_debug_status }}">{{ entry_debug }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <select name="fraud_fraudlabspro_debug_status" id="input-debug-status" class="form-select">
+                  {% if fraud_fraudlabspro_debug_status %}
+                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                    <option value="0">{{ text_disabled }}</option>
+                  {% else %}
+                    <option value="1">{{ text_enabled }}</option>
+                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                  {% endif %}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <div class="form-group" style="padding-left:15px;">
+                <div>{{ text_information }}</div>
+            </div>
+          </fieldset>
+        </form>
+        <form action="{{ action }}" id="form-purge" method="post">
+            <input type="hidden" name="purge" value="true">
+        </form>
+        <script>
+jQuery(document).ready(function($){
+    $('#button-purge').on('click', function(e) {
+        if (!confirm('WARNING: All data will be permanently deleted from the storage. Are you sure you want to proceed with the deletion?')) {
+            e.preventDefault();
+        }
+        else {
+            $('#form-purge').submit();
+        }
+    });
+});
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
