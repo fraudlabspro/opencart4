@@ -46,6 +46,71 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			$data['fraud_fraudlabspro_key'] = $this->config->get('fraud_fraudlabspro_key');
 		}
 
+		$plan_name = $credit_available = $next_renewal_date = '-';
+		$plan_upgrade = $credit_display = $credit_warning = '';
+
+		if ($data['fraud_fraudlabspro_key'] != '') {
+			$plan_request['key'] = $data['fraud_fraudlabspro_key'];
+			$plan_request['format'] = 'json';
+
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v1/plan?' . http_build_query($plan_request));
+			curl_setopt($curl, CURLOPT_HEADER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
+			curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+
+			$plan_response = curl_exec($curl);
+
+			curl_close($curl);
+
+			if (is_null($plan_json = json_decode($plan_response)) === FALSE) {
+				$plan_name = $plan_json->plan_name;
+				$credit_available = $plan_json->query_limit - $plan_json->query_limit_used;
+				$next_renewal_date = $plan_json->next_renewal_date;
+
+				switch ($plan_name) {
+					case "FraudLabs Pro Micro":
+						$plan_upgrade = '8';
+						break;
+
+					case "FraudLabs Pro Mini":
+						$plan_upgrade = '2';
+						break;
+
+					case "FraudLabs Pro Small":
+						$plan_upgrade = '3';
+						break;
+
+					case "FraudLabs Pro Medium":
+						$plan_upgrade = '4';
+						break;
+
+					case "FraudLabs Pro Large":
+						$plan_upgrade = '5';
+						break;
+				}
+
+				if (($plan_name == 'FraudLabs Pro Micro') && ($credit_available <= 100)){
+					$credit_display = 'color:red;';
+					$credit_warning = '[You are going to run out of credits, you should <a href="https://www.fraudlabspro.com/pricing" target="_blank">upgrade</a> now to avoid service disruptions.]';
+				} elseif ($credit_available <= 100) {
+					$credit_display = 'color:red;';
+					$credit_warning = '';
+				} else {
+					$credit_display = $credit_warning = '';
+				}
+			}
+		}
+
+		$data['fraud_fraudlabspro_plan'] = $plan_name;
+		$data['fraud_fraudlabspro_credit'] = number_format((int)$credit_available, false, false, ",");
+		$data['fraud_fraudlabspro_credit_display'] = $credit_display;
+		$data['fraud_fraudlabspro_credit_warning'] = $credit_warning;
+		$data['fraud_fraudlabspro_renewal'] = $next_renewal_date;
+		$data['fraud_fraudlabspro_upgrade'] = $plan_upgrade;
+
 		if (isset($this->request->post['fraud_fraudlabspro_review_status_id'])) {
 			$data['fraud_fraudlabspro_review_status_id'] = $this->request->post['fraud_fraudlabspro_review_status_id'];
 		} else {

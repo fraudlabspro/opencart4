@@ -4,12 +4,11 @@ $_['heading_title']              = 'FraudLabs Pro';
 
 // Text
 $_['text_extension']             = 'Extensions';
-$_['text_success']               = 'Success: You have modified FraudLabs Pro Settings!';
+$_['text_success']               = 'Success: You have modified FraudLabs Pro Settings! Refresh the page for the latest settings!';
 $_['text_success_delete']        = 'Success: You have deleted all FraudLabs Pro data!';
 $_['text_edit']                  = 'Settings';
 $_['text_signup']                = 'FraudLabs Pro is a fraud detection solution. It helps you to reduce your fraud losses or chargebacks by screening all your incoming orders for fraud patterns. You can <u><a href="https://www.fraudlabspro.com/pricing?ref=1730" target="_blank" class="alert-link">sign up</a></u> for a free Micro plan to get the API key if you do not have one.';
-$_['text_rule_info']             = 'Please visit <strong>Rules</strong> settings page on <a href="https://www.fraudlabspro.com/merchant/rule" target="_blank">Merchant Area</a> to review or edit the fraud score threshold and the associated action.';
-$_['text_information']             = 'Please visit <a href="https://www.fraudlabspro.com/resources/categories/opencart" target="_blank">FraudLabs Pro Articles & Tutorials</a> page to learn more about the services.<br/><br/>Please <a href="https://www.fraudlabspro.com/contact" target="_blank">contact us</a> if any help is needed.';
+$_['text_information']           = 'Please visit <a href="https://www.fraudlabspro.com/resources/categories/opencart" target="_blank">FraudLabs Pro Articles & Tutorials</a> page to learn more about the services.<br/><br/>Please <a href="https://www.fraudlabspro.com/contact" target="_blank">contact us</a> if any help is needed.';
 $_['text_id']                    = 'FraudLabs Pro ID';
 $_['text_ip_address']            = 'IP Address';
 $_['text_ip_usage_type']         = 'IP Usage Type';
@@ -39,9 +38,11 @@ $_['text_zapier_reject']         = 'Reject Status';
 
 // Entry
 $_['entry_status']               = 'Status';
+$_['entry_plan']                 = 'Plan Name';
+$_['entry_credit']               = 'Credit Available';
+$_['entry_renewal']              = 'Next Renewal Date';
 $_['entry_key']                  = 'API Key';
-$_['entry_score']                = 'Risk Score';
-$_['entry_order_status']         = 'Order Status';
+$_['entry_rule']                 = 'Manage Rules';
 $_['entry_review_status']        = 'Review Status';
 $_['entry_approve_status']       = 'Approve Status';
 $_['entry_reject_status']        = 'Reject Status';

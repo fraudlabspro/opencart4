@@ -29,23 +29,53 @@
               </select>
             </div>
           </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="input-key">{{ entry_key }}</label>
-            <div class="col-sm-10">
-              <div class="input-group">
-                <input type="text" name="fraud_fraudlabspro_key" value="{{ fraud_fraudlabspro_key }}" id="input-key" placeholder="{{ entry_key }}" class="form-control"/>
+          <fieldset>
+            <legend>License Information</legend>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-key">{{ entry_plan }}</label>
+              <div class="col-sm-10">
+                <div class="form-control" style="border-style:none; box-shadow:none;">{{ fraud_fraudlabspro_plan }}{% if fraud_fraudlabspro_plan and fraud_fraudlabspro_plan != 'FraudLabs Pro Enterprise' %}&nbsp;&nbsp;<a href="https://www.fraudlabspro.com/subscribe?id={{ fraud_fraudlabspro_upgrade }}" target="_blank">Upgrade</a>{% endif %}</div>
               </div>
             </div>
-          </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-key">{{ entry_credit }}</label>
+              <div class="col-sm-10">
+                <div class="form-control" style="border-style:none; box-shadow:none;"><span style="{{ fraud_fraudlabspro_credit_display }}">{{ fraud_fraudlabspro_credit }}</span>&nbsp;&nbsp;<strong><small>{{ fraud_fraudlabspro_credit_warning }}</small></strong></div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-key">{{ entry_renewal }}</label>
+              <div class="col-sm-10">
+                <div class="form-control" style="border-style:none; box-shadow:none;">{{ fraud_fraudlabspro_renewal }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-key">{{ entry_key }}</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <input type="text" name="fraud_fraudlabspro_key" value="{{ fraud_fraudlabspro_key }}" id="input-key" placeholder="{{ entry_key }}" class="form-control"/>
+                </div>
+                <div class="form-control" style="border-style:none; box-shadow:none;"><a href="https://www.fraudlabspro.com/merchant/login" target="_blank">Login to Merchant Area</a></div>
+              </div>
+            </div>
+          </fieldset>
           <fieldset>
             <legend>Rules Validation</legend>
-            <div class="alert alert-info">{{ text_rule_info }}</div>
             <div class="row mb-3">
-              <label class="col-sm-2 col-form-label" for="input-fraud-review-status"><span data-toggle="tooltip" title="{{ help_review_status }}">{{ entry_review_status }} <i class="fas fa-question-circle"></i></span></label>
+              <label class="col-sm-2 col-form-label">{{ entry_rule }}</label>
               <div class="col-sm-10">
-                <select name="fraud_fraudlabspro_review_status_id" id="input-fraud-review-status" class="form-select">
+                <div class="form-control" style="border-style:none; box-shadow:none;">Please login to the <a href="https://www.fraudlabspro.com/merchant/rule" target="_blank">merchant area Rule page</a> to view and configure the validation rules.</div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Order Settings</legend>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-fraud-approve-status"><span data-toggle="tooltip" title="{{ help_approve_status }}">{{ entry_approve_status }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <select name="fraud_fraudlabspro_approve_status_id" id="input-fraud-approve-status" class="form-select">
                   {% for order_status in order_statuses %}
-                    {% if order_status.order_status_id == fraud_fraudlabspro_review_status_id %}
+                    {% if order_status.order_status_id == fraud_fraudlabspro_approve_status_id %}
                       <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
                     {% else %}
                       <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
@@ -55,11 +85,11 @@
               </div>
             </div>
             <div class="row mb-3">
-              <label class="col-sm-2 col-form-label" for="input-fraud-approve-status"><span data-toggle="tooltip" title="{{ help_approve_status }}">{{ entry_approve_status }} <i class="fas fa-question-circle"></i></span></label>
+              <label class="col-sm-2 col-form-label" for="input-fraud-review-status"><span data-toggle="tooltip" title="{{ help_review_status }}">{{ entry_review_status }} <i class="fas fa-question-circle"></i></span></label>
               <div class="col-sm-10">
-                <select name="fraud_fraudlabspro_approve_status_id" id="input-fraud-approve-status" class="form-select">
+                <select name="fraud_fraudlabspro_review_status_id" id="input-fraud-review-status" class="form-select">
                   {% for order_status in order_statuses %}
-                    {% if order_status.order_status_id == fraud_fraudlabspro_approve_status_id %}
+                    {% if order_status.order_status_id == fraud_fraudlabspro_review_status_id %}
                       <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
                     {% else %}
                       <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
@@ -80,6 +110,12 @@
                     {% endif %}
                   {% endfor %}
                 </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-ip"><span data-toggle="tooltip" title="{{ help_simulate_ip }}">{{ entry_simulate_ip }} <i class="fas fa-question-circle"></i></span></label>
+              <div class="col-sm-10">
+                <input type="text" name="fraud_fraudlabspro_simulate_ip" value="{{ fraud_fraudlabspro_simulate_ip }}" placeholder="{{ entry_simulate_ip }}" id="input-ip" class="form-control" />
               </div>
             </div>
           </fieldset>
@@ -132,13 +168,7 @@
             </div>
           </fieldset>
           <fieldset>
-            <legend>Testing Purpose</legend>
-            <div class="row mb-3">
-              <label class="col-sm-2 col-form-label" for="input-ip"><span data-toggle="tooltip" title="{{ help_simulate_ip }}">{{ entry_simulate_ip }} <i class="fas fa-question-circle"></i></span></label>
-              <div class="col-sm-10">
-                <input type="text" name="fraud_fraudlabspro_simulate_ip" value="{{ fraud_fraudlabspro_simulate_ip }}" placeholder="{{ entry_simulate_ip }}" id="input-ip" class="form-control" />
-              </div>
-            </div>
+            <legend>Extension Settings</legend>
             <div class="row mb-3">
               <label class="col-sm-2 col-form-label" for="input-debug-status"><span data-toggle="tooltip" title="{{ help_debug_status }}">{{ entry_debug }} <i class="fas fa-question-circle"></i></span></label>
               <div class="col-sm-10">

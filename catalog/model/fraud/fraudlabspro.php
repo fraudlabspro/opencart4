@@ -77,7 +77,11 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 			$ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
 		}
 
-		$payment_mode = $data['payment_code'];
+		$payment_mode = (isset($data['payment_code']) ? $data['payment_code'] : $data['payment_method']['code']);
+		if (strpos($payment_mode, '.') !== false) {
+			$payment_mode = substr($payment_mode, (strpos($payment_mode, '.')+1));
+		}
+		$data['payment_code'] = $payment_mode;
 		if ($payment_mode === 'ccsave') {
 			$paymentMode = 'creditcard';
 		} elseif ($payment_mode === 'cashondelivery') {
@@ -162,7 +166,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.3.1';
+		$request['source_version'] = '4.0.3.2';
 
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v1/order/screen?' . http_build_query($request));
