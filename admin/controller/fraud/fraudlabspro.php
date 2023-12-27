@@ -227,11 +227,32 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			// Feedback FLP status to server
 			$fraud_fraudlabspro_key = $this->config->get('fraud_fraudlabspro_key');
 
-			for($i=0; $i<3; $i++){
-				$result = @file_get_contents('https://api.fraudlabspro.com/v1/order/feedback?key=' . $fraud_fraudlabspro_key . '&format=json&id=' . $this->request->post['flp_id'] . '&action=' . $flp_status . '&note=' . $note . '&source=opencart&triggered_by=manual');
+			$request = [
+				'key'			=> $fraud_fraudlabspro_key,
+				'action'		=> $flp_status,
+				'id'			=> $this->request->post['flp_id'],
+				'note'			=> $note,
+				'format'		=> 'json',
+				'source'		=> 'opencart',
+				'triggered_by'	=> 'manual'
+			];
 
-				if($result) break;
-			}
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/feedback');
+			curl_setopt($ch, CURLOPT_FAILONERROR, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+			curl_setopt($ch, CURLOPT_HTTP_VERSION, '1.1');
+			curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, (is_array($request)) ? http_build_query($request) : $request);
+
+			$response = curl_exec($ch);
+
+			curl_close($ch);
 
 			if (strtolower($flp_status) == 'reject_blacklist'){
 				$flp_status = "REJECT";

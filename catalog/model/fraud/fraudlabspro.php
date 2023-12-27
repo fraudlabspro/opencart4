@@ -166,68 +166,73 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.3.2';
+		$request['source_version'] = '4.0.4.0';
 
-		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v1/order/screen?' . http_build_query($request));
-		curl_setopt($curl, CURLOPT_HEADER, 0);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
-		curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/screen');
+		curl_setopt($ch, CURLOPT_FAILONERROR, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+		curl_setopt($ch, CURLOPT_HTTP_VERSION, '1.1');
+		curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, (is_array($request)) ? http_build_query($request) : $request);
 
-		$response = curl_exec($curl);
+		$response = curl_exec($ch);
 
-		curl_close($curl);
+		curl_close($ch);
 
 		if (is_null($json = json_decode($response)) === FALSE) {
-			$json->fraudlabspro_rules = isset($json->fraudlabspro_rules) ? $json->fraudlabspro_rules : '';
+			$json->fraudlabspro_rules = isset($json->fraudlabspro_rules) ? implode(', ', $json->fraudlabspro_rules) : '';
 			$this->db->query("REPLACE INTO `" . DB_PREFIX . "fraudlabspro` SET order_id = '" . (int)$data['order_id'] . "',
-				is_country_match = '" . $this->db->escape($json->is_country_match) . "',
-				is_high_risk_country = '" . $this->db->escape($json->is_high_risk_country) . "',
-				distance_in_km = '" . $this->db->escape($json->distance_in_km) . "',
-				distance_in_mile = '" . $this->db->escape($json->distance_in_mile) . "',
-				ip_country = '" . $this->db->escape($json->ip_country) . "',
-				ip_region = '" . $this->db->escape($json->ip_region) . "',
-				ip_city = '" . $this->db->escape($json->ip_city) . "',
-				ip_continent = '" . $this->db->escape($json->ip_continent) . "',
-				ip_latitude = '" . $this->db->escape($json->ip_latitude) . "',
-				ip_longitude = '" . $this->db->escape($json->ip_longitude) . "',
-				ip_timezone = '" . $this->db->escape($json->ip_timezone) . "',
-				ip_elevation = '" . $this->db->escape($json->ip_elevation) . "',
-				ip_domain = '" . $this->db->escape($json->ip_domain) . "',
-				ip_mobile_mnc = '" . $this->db->escape($json->ip_mobile_mnc) . "',
-				ip_mobile_mcc = '" . $this->db->escape($json->ip_mobile_mcc) . "',
-				ip_mobile_brand = '" . $this->db->escape($json->ip_mobile_brand) . "',
-				ip_netspeed = '" . $this->db->escape($json->ip_netspeed) . "',
-				ip_isp_name = '" . $this->db->escape($json->ip_isp_name) . "',
-				ip_usage_type = '" . $this->db->escape($json->ip_usage_type) . "',
-				is_free_email = '" . $this->db->escape($json->is_free_email) . "',
-				is_new_domain_name = '" . $this->db->escape($json->is_new_domain_name) . "',
-				is_proxy_ip_address = '" . $this->db->escape($json->is_proxy_ip_address) . "',
-				is_bin_found = '" . $this->db->escape($json->is_bin_found) . "',
-				is_bin_country_match = '" . $this->db->escape($json->is_bin_country_match) . "',
-				is_bin_name_match = '" . $this->db->escape($json->is_bin_name_match) . "',
-				is_bin_phone_match = '" . $this->db->escape($json->is_bin_phone_match) . "',
-				is_bin_prepaid = '" . $this->db->escape($json->is_bin_prepaid) . "',
-				is_address_ship_forward = '" . $this->db->escape($json->is_address_ship_forward) . "',
-				is_bill_ship_city_match = '" . $this->db->escape($json->is_bill_ship_city_match) . "',
-				is_bill_ship_state_match = '" . $this->db->escape($json->is_bill_ship_state_match) . "',
-				is_bill_ship_country_match = '" . $this->db->escape($json->is_bill_ship_country_match) . "',
-				is_bill_ship_postal_match = '" . $this->db->escape($json->is_bill_ship_postal_match) . "',
-				is_ip_blacklist = '" . $this->db->escape($json->is_ip_blacklist) . "',
-				is_email_blacklist = '" . $this->db->escape($json->is_email_blacklist) . "',
-				is_credit_card_blacklist = '" . $this->db->escape($json->is_credit_card_blacklist) . "',
-				is_device_blacklist = '" . $this->db->escape($json->is_device_blacklist) . "',
-				is_user_blacklist = '" . $this->db->escape($json->is_user_blacklist) . "',
-				fraudlabspro_rules = '" . $this->db->escape($json->fraudlabspro_rules) . "',
+				is_country_match = '" . $this->db->escape(($json->billing_address->is_ip_country_match) ? 'Y' : 'N') . "',
+				is_high_risk_country = '',
+				distance_in_km = '" . $this->db->escape($json->billing_address->ip_distance_in_km) . "',
+				distance_in_mile = '" . $this->db->escape($json->billing_address->ip_distance_in_mile) . "',
+				ip_country = '" . $this->db->escape($json->ip_geolocation->country_code) . "',
+				ip_region = '" . $this->db->escape($json->ip_geolocation->region) . "',
+				ip_city = '" . $this->db->escape($json->ip_geolocation->city) . "',
+				ip_continent = '" . $this->db->escape($json->ip_geolocation->continent) . "',
+				ip_latitude = '" . $this->db->escape($json->ip_geolocation->latitude) . "',
+				ip_longitude = '" . $this->db->escape($json->ip_geolocation->longitude) . "',
+				ip_timezone = '" . $this->db->escape($json->ip_geolocation->timezone) . "',
+				ip_elevation = '" . $this->db->escape($json->ip_geolocation->elevation) . "',
+				ip_domain = '" . $this->db->escape($json->ip_geolocation->domain) . "',
+				ip_mobile_mnc = '" . $this->db->escape(($json->ip_geolocation->mobile_mnc) ?? '') . "',
+				ip_mobile_mcc = '" . $this->db->escape(($json->ip_geolocation->mobile_mcc) ?? '') . "',
+				ip_mobile_brand = '" . $this->db->escape(($json->ip_geolocation->mobile_brand) ?? '') . "',
+				ip_netspeed = '" . $this->db->escape(($json->ip_geolocation->netspeed) ?? '') . "',
+				ip_isp_name = '" . $this->db->escape(($json->ip_geolocation->isp_name) ?? '') . "',
+				ip_usage_type = '" . $this->db->escape(implode(', ', $json->ip_geolocation->usage_type)) . "',
+				is_free_email = '" . $this->db->escape(($json->email_address->is_free) ? 'Y' : 'N') . "',
+				is_new_domain_name = '" . $this->db->escape(($json->email_address->is_new_domain_name) ? 'Y' : 'N') . "',
+				is_proxy_ip_address = '" . $this->db->escape(($json->ip_geolocation->is_proxy) ? 'Y' : 'N') . "',
+				is_bin_found = '" . $this->db->escape(($json->credit_card->is_bin_exist) ? 'Y' : 'N') . "',
+				is_bin_country_match = '" . $this->db->escape(($json->credit_card->is_bin_country_match) ? 'Y' : 'N') . "',
+				is_bin_name_match = '',
+				is_bin_phone_match = '',
+				is_bin_prepaid = '" . $this->db->escape(($json->credit_card->is_prepaid) ? 'Y' : 'N') . "',
+				is_address_ship_forward = '" . $this->db->escape(($json->shipping_address->is_address_ship_forward) ? 'Y' : 'N') . "',
+				is_bill_ship_city_match = '" . $this->db->escape(($json->shipping_address->is_bill_city_match) ? 'Y' : 'N') . "',
+				is_bill_ship_state_match = '" . $this->db->escape(($json->shipping_address->is_bill_state_match) ? 'Y' : 'N') . "',
+				is_bill_ship_country_match = '" . $this->db->escape(($json->shipping_address->is_bill_country_match) ? 'Y' : 'N') . "',
+				is_bill_ship_postal_match = '" . $this->db->escape(($json->shipping_address->is_bill_postcode_match) ? 'Y' : 'N') . "',
+				is_ip_blacklist = '" . $this->db->escape(($json->ip_geolocation->is_in_blacklist) ? 'Y' : 'N') . "',
+				is_email_blacklist = '" . $this->db->escape(($json->email_address->is_in_blacklist) ? 'Y' : 'N') . "',
+				is_credit_card_blacklist = '" . $this->db->escape(($json->credit_card->is_in_blacklist) ? 'Y' : 'N') . "',
+				is_device_blacklist = '" . $this->db->escape(($json->device->is_in_blacklist) ? 'Y' : 'N') . "',
+				is_user_blacklist = '" . $this->db->escape(($json->username->is_in_blacklist) ? 'Y' : 'N') . "',
+				fraudlabspro_rules = '" . $this->db->escape(is_array($json->fraudlabspro_rules) ? implode(', ', $json->fraudlabspro_rules) : $json->fraudlabspro_rules) . "',
 				fraudlabspro_score = '" . $this->db->escape($json->fraudlabspro_score) . "',
-				fraudlabspro_distribution = '" . $this->db->escape($json->fraudlabspro_distribution) . "',
+				fraudlabspro_distribution = '',
 				fraudlabspro_status = '" . $this->db->escape($json->fraudlabspro_status) . "',
 				fraudlabspro_id = '" . $this->db->escape($json->fraudlabspro_id) . "',
-				fraudlabspro_error = '" . $this->db->escape($json->fraudlabspro_error_code) . "',
-				fraudlabspro_message = '" . $this->db->escape($json->fraudlabspro_message) . "',
-				fraudlabspro_credits = '" .  $this->db->escape($json->fraudlabspro_credits) . "',
+				fraudlabspro_error = '" . $this->db->escape(($json->error->error_code) ?? '') . "',
+				fraudlabspro_message = '" . $this->db->escape(($json->error->error_message) ?? '') . "',
+				fraudlabspro_credits = '" .  $this->db->escape($json->remaining_credits) . "',
 				api_key = '" .  $this->config->get('fraud_fraudlabspro_key') . "',
 				ip_address = '" .  $ip . "'"
 			);
@@ -244,8 +249,9 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		}
 
 		// Do not perform any action if error found
-		if ($json->fraudlabspro_error_code) {
-			$this->write_debug_log('Error code:' . $json->fraudlabspro_error_code . ' found in Order ' . (int)$data['order_id'] . '.');
+		$flpErr = ($json->fraudlabspro_error_code ?? '');
+		if ($flpErr) {
+			$this->write_debug_log('Error code:' . $flpErr . ' found in Order ' . (int)$data['order_id'] . '.');
 			return 0;
 		}
 
