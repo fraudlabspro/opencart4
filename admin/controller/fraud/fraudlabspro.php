@@ -239,7 +239,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/feedback');
-			curl_setopt($ch, CURLOPT_FAILONERROR, true);
+			curl_setopt($ch, CURLOPT_FAILONERROR, false);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

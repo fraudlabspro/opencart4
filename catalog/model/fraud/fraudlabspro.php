@@ -156,21 +156,21 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['payment_gateway'] = $data['payment_code'];
 		$request['payment_mode'] = $paymentMode;
 		$request['user_order_id'] = $data['order_id'];
-		$request['device_fingerprint'] = (isset($_COOKIE['flp_device'])) ? $_COOKIE['flp_device'] : '';
-		$request['flp_checksum'] = (isset($_COOKIE['flp_checksum'])) ? $_COOKIE['flp_checksum'] : '';
-		$request['bin_no'] = (isset($_SESSION['flp_cc_bin'])) ? $_SESSION['flp_cc_bin'] : '';
-		$request['card_hash'] = (isset($_SESSION['flp_cc_hash'])) ? $_SESSION['flp_cc_hash'] : '';
+		$request['device_fingerprint'] = ($_COOKIE['flp_device']) ?? '';
+		$request['flp_checksum'] = ($_COOKIE['flp_checksum']) ?? '';
+		$request['bin_no'] = ($_SESSION['flp_cc_bin']) ?? '';
+		$request['card_hash'] = ($_SESSION['flp_cc_hash']) ?? '';
 		$request['items'] = $item_sku;
 		$request['coupon_code'] = $coupon_code;
 		$request['coupon_amount'] = $coupon_amt;
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.4.0';
+		$request['source_version'] = '4.0.4.1';
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/screen');
-		curl_setopt($ch, CURLOPT_FAILONERROR, true);
+		curl_setopt($ch, CURLOPT_FAILONERROR, false);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
