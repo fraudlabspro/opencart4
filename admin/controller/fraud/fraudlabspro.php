@@ -169,6 +169,12 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			$data['fraud_fraudlabspro_debug_status'] = $this->config->get('fraud_fraudlabspro_debug_status');
 		}
 
+		if (isset($this->request->post['fraud_fraudlabspro_sync_status'])) {
+			$data['fraud_fraudlabspro_sync_status'] = $this->request->post['fraud_fraudlabspro_sync_status'];
+		} else {
+			$data['fraud_fraudlabspro_sync_status'] = $this->config->get('fraud_fraudlabspro_sync_status');
+		}
+
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
@@ -203,14 +209,26 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 
 	public function install(): void {
 		$this->load->model('extension/fraudlabspro/fraud/fraudlabspro');
-
 		$this->model_extension_fraudlabspro_fraud_fraudlabspro->install();
+
+		$this->load->model('setting/event');
+		$event = [
+			'code' => 'flp_sync_order_change',
+			'trigger' => 'catalog/model/checkout/order/addHistory/after',
+			'action' => 'extension/fraudlabspro/fraud/fraudlabspro',
+			'description' => 'Event to sync OpenCart order status with FraudLabs Pro status',
+			'sort_order' => 1,
+			'status' => true
+		];
+		$this->model_setting_event->addEvent($event);
 	}
 
 	public function uninstall(): void {
 		$this->load->model('extension/fraudlabspro/fraud/fraudlabspro');
-
 		$this->model_extension_fraudlabspro_fraud_fraudlabspro->uninstall();
+
+		$this->load->model('setting/event');
+		$this->model_setting_event->deleteEventByCode('flp_sync_order_change');
 	}
 
 	public function order(): string {

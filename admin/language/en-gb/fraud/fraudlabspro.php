@@ -50,6 +50,7 @@ $_['entry_email_notification']   = 'Email Notification';
 $_['entry_zapier_notification']  = 'Zapier Notification';
 $_['entry_simulate_ip']          = 'Simulate IP';
 $_['entry_debug']                = 'Save Debug Log';
+$_['entry_sync_status']          = 'Sync Complete/Canceled Status';
 
 // Help
 $_['help_review_status']         = 'Orders that marked as review by FraudLabs Pro will be assigned this order status.';
@@ -79,6 +80,7 @@ $_['help_message']               = 'FraudLabs Pro error message description.';
 $_['help_transaction_id']        = 'Unique identifier for a transaction screened by FraudLabs Pro system.';
 $_['help_credits']               = 'Balance of the credits available after this transaction.';
 $_['help_rules']                 = 'FraudLabs Pro Rules triggered.';
+$_['help_sync_status']           = 'Automatically synchronize Completed order with FraudLabs Pro Approve status and Canceled order with FraudLabs Pro Reject status.';
 
 // Error
 $_['error_permission']           = 'Warning: You do not have permission to modify FraudLabs Pro settings!';

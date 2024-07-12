@@ -88,6 +88,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` (`code`, `key`, `value`, `serialized`) VALUES ('fraud_fraudlabspro', 'fraud_fraudlabspro_review_status_id', '" . (int)$status_fraud_review_id . "', '0');");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` (`code`, `key`, `value`, `serialized`) VALUES ('fraud_fraudlabspro', 'fraud_fraudlabspro_approve_status_id', '2', '0');");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` (`code`, `key`, `value`, `serialized`) VALUES ('fraud_fraudlabspro', 'fraud_fraudlabspro_reject_status_id', '8', '0');");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` (`code`, `key`, `value`, `serialized`) VALUES ('fraud_fraudlabspro', 'fraud_fraudlabspro_sync_status', '1', '0');");
 
 		$this->cache->delete('order_status.' . (int)$this->config->get('config_language_id'));
 	}
