@@ -166,7 +166,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.5.0';
+		$request['source_version'] = '4.0.6.0';
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/screen');
@@ -261,7 +261,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 			$zap_request['format'] = 'json';
 
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v1/zaptrigger?' . http_build_query($zap_request));
+			curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/zaptrigger?' . http_build_query($zap_request));
 			curl_setopt($curl, CURLOPT_HEADER, 0);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);

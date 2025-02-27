@@ -54,7 +54,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			$plan_request['format'] = 'json';
 
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v1/plan?' . http_build_query($plan_request));
+			curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/plan/result?' . http_build_query($plan_request));
 			curl_setopt($curl, CURLOPT_HEADER, 0);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -314,7 +314,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			$plan_request['format'] = 'json';
 
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v1/plan?' . http_build_query($plan_request));
+			curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/plan/result?' . http_build_query($plan_request));
 			curl_setopt($curl, CURLOPT_HEADER, 0);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
