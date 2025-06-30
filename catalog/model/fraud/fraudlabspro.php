@@ -166,7 +166,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.6.0';
+		$request['source_version'] = '4.0.6.1';
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/screen');
@@ -190,8 +190,8 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 			$this->db->query("REPLACE INTO `" . DB_PREFIX . "fraudlabspro` SET order_id = '" . (int)$data['order_id'] . "',
 				is_country_match = '" . $this->db->escape(($json->billing_address->is_ip_country_match) ? 'Y' : 'N') . "',
 				is_high_risk_country = '',
-				distance_in_km = '" . $this->db->escape($json->billing_address->ip_distance_in_km) . "',
-				distance_in_mile = '" . $this->db->escape($json->billing_address->ip_distance_in_mile) . "',
+				distance_in_km = '" . $this->db->escape(($json->billing_address->ip_distance_in_km) ?? '') . "',
+				distance_in_mile = '" . $this->db->escape(($json->billing_address->ip_distance_in_mile) ?? '') . "',
 				ip_country = '" . $this->db->escape($json->ip_geolocation->country_code) . "',
 				ip_region = '" . $this->db->escape($json->ip_geolocation->region) . "',
 				ip_city = '" . $this->db->escape($json->ip_geolocation->city) . "',
