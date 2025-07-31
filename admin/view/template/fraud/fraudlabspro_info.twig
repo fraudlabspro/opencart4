@@ -12,71 +12,77 @@
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_status }}">{{ text_status }}</span></td>
-    <td id="flp_status"><span style="font-weight:bold; color: {% if flp_status|lower == 'approve' %} #5cb85c {% elseif flp_status|lower == 'review' %} #f0ad4e {% else %} #d9534f {% endif %};">{{ flp_status }}</span></td>
+    <td id="flp_status"><span style="font-weight:bold; color: {% if flp_status|lower == 'approve' %} #5cb85c {% elseif flp_status|lower == 'review' %} #f0ad4e {% else %} #d9534f {% endif %};">{{ flp_status|e }}</span></td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_address }}">{{ text_ip_address }}</span></td>
-    <td>{{ flp_ip_address }}</td>
+    <td>{{ flp_ip_address|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_location }}">{{ text_ip_location }}</span></td>
-    <td>{{ flp_ip_location }}</td>
+    <td>
+      {% if flp_ip_country %}
+        {{ flp_ip_country|e }}, {{ flp_ip_region|e }}, {{ flp_ip_city|e }} <a href="https://www.geolocation.com/{{ flp_ip_address|e('html_attr') }}" target="_blank">[Map]</a>
+      {% else %}
+        -
+      {% endif %}
+    </td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_latitude }}">{{ text_ip_latitude }}</span></td>
-    <td>{{ flp_ip_latitude }}</td>
+    <td>{{ flp_ip_latitude|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_longitude }}">{{ text_ip_longitude }}</span></td>
-    <td>{{ flp_ip_longitude }}</td>
+    <td>{{ flp_ip_longitude|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_distance }}">{{ text_ip_distance }}</span></td>
-    <td>{{ flp_ip_distance }}</td>
+    <td>{{ flp_ip_distance|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_usage_type }}">{{ text_ip_usage_type }}</span></td>
-    <td>{{ flp_ip_usage_type }}</td>
+    <td>{{ flp_ip_usage_type|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_time_zone }}">{{ text_ip_time_zone }}</span></td>
-    <td>{{ flp_ip_time_zone }}</td>
+    <td>{{ flp_ip_time_zone|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_free_email }}">{{ text_free_email }}</span></td>
-    <td>{{ flp_free_email }}</td>
+    <td>{{ flp_free_email|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ship_forward }}">{{ text_ship_forward }}</span></td>
-    <td>{{ flp_ship_forward }}</td>
+    <td>{{ flp_ship_forward|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_using_proxy }}">{{ text_using_proxy }}</span></td>
-    <td>{{ flp_using_proxy }}</td>
+    <td>{{ flp_using_proxy|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_blacklist }}">{{ text_ip_blacklist }}</span></td>
-    <td>{{ flp_ip_blacklist }}</td>
+    <td>{{ flp_ip_blacklist|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_email_blacklist }}">{{ text_email_blacklist }}</span></td>
-    <td>{{ flp_email_blacklist }}</td>
+    <td>{{ flp_email_blacklist|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_phone_verify }}">{{ text_phone_verify }}</span></td>
-    <td>{{ flp_phone_verify }}</td>
+    <td>{{ flp_phone_verify|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_rules }}">{{ text_rules }}</span></td>
-    <td>{{ flp_rules }}</td>
+    <td>{{ flp_rules|e }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_credits }}">{{ text_credits }}</span></td>
-    <td>{{ flp_credits }} {{ text_flp_upgrade }}</td>
+    <td>{{ flp_credits|e }} {{ text_flp_upgrade }}</td>
   </tr>
   <tr>
     <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_message }}">{{ text_message }}</span></td>
-    <td>{{ flp_message }}</td>
+    <td>{{ flp_message|e }}</td>
   </tr>
 
   {% if flp_status|lower == 'review' %}
@@ -91,6 +97,7 @@
         <input type="hidden" id="flp_id" name="flp_id" value="{{ flp_id }}" />
         <input type="hidden" id="new_status" name="new_status" value="" />
         <input type="hidden" id="feedback_note" name="feedback_note" value="" />
+        <input type="hidden" name="user_token" value="{{ user_token }}" />
       </form>
 
       <script>

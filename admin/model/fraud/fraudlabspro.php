@@ -60,7 +60,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$this->db->query("DROP PROCEDURE IF EXISTS `Alter_FLP_Table`;");
 		$this->db->query("CREATE PROCEDURE Alter_FLP_Table()
 		BEGIN
-			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "fraudlabspro' AND COLUMN_NAME = 'fraudlabspro_rules')
+			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $this->db->escape(DB_DATABASE) . "' AND TABLE_NAME = '" . $this->db->escape(DB_PREFIX . 'fraudlabspro') . "' AND COLUMN_NAME = 'fraudlabspro_rules')
 			THEN ALTER TABLE `" . DB_PREFIX . "fraudlabspro` ADD `fraudlabspro_rules` VARCHAR(200) NOT NULL;
 			END IF;
 		END;");
@@ -70,7 +70,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$this->db->query("DROP PROCEDURE IF EXISTS `Alter_FLP_Table`;");
 		$this->db->query("CREATE PROCEDURE Alter_FLP_Table()
 		BEGIN
-			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "fraudlabspro' AND COLUMN_NAME = 'is_phone_verified')
+			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $this->db->escape(DB_DATABASE) . "' AND TABLE_NAME = '" . $this->db->escape(DB_PREFIX . 'fraudlabspro') . "' AND COLUMN_NAME = 'is_phone_verified')
 			THEN ALTER TABLE `" . DB_PREFIX . "fraudlabspro` ADD `is_phone_verified` VARCHAR(50) NOT NULL;
 			END IF;
 		END;");

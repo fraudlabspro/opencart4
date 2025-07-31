@@ -16,7 +16,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$this->db->query("DROP PROCEDURE IF EXISTS `Alter_FLP_Table`;");
 		$this->db->query("CREATE PROCEDURE Alter_FLP_Table()
 		BEGIN
-			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "fraudlabspro' AND COLUMN_NAME = 'fraudlabspro_rules')
+			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $this->db->escape(DB_DATABASE) . "' AND TABLE_NAME = '" . $this->db->escape(DB_PREFIX . 'fraudlabspro') . "' AND COLUMN_NAME = 'fraudlabspro_rules')
 			THEN ALTER TABLE `" . DB_PREFIX . "fraudlabspro` ADD `fraudlabspro_rules` VARCHAR(200) NOT NULL;
 			END IF;
 		END;");
@@ -26,7 +26,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$this->db->query("DROP PROCEDURE IF EXISTS `Alter_FLP_Table`;");
 		$this->db->query("CREATE PROCEDURE Alter_FLP_Table()
 		BEGIN
-			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "fraudlabspro' AND COLUMN_NAME = 'is_phone_verified')
+			IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $this->db->escape(DB_DATABASE) . "' AND TABLE_NAME = '" . $this->db->escape(DB_PREFIX . 'fraudlabspro') . "' AND COLUMN_NAME = 'is_phone_verified')
 			THEN ALTER TABLE `" . DB_PREFIX . "fraudlabspro` ADD `is_phone_verified` VARCHAR(50) NOT NULL;
 			END IF;
 		END;");
@@ -66,7 +66,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		// Get real client IP is they are behind proxy server.
 		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$xip = trim(current(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
-			
+
 			if (filter_var($xip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
 				$ip_forwarded = $ip = $xip;
 			}
@@ -166,7 +166,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.6.1';
+		$request['source_version'] = '4.0.6.2';
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/screen');
@@ -279,23 +279,31 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 			}
 
 			if (!empty($target_url)) {
-				$zapresponse = $this->http($target_url, [
-					'id'			=> $json->fraudlabspro_id,
-					'date_created'	=> gmdate('Y-m-d H:i:s'),
-					'flp_status'	=> $json->fraudlabspro_status,
-					'full_name'		=> $data['firstname'] . ' ' . $data['lastname'],
-					'email'			=> $data['email'],
-					'order_id'		=> $data['order_id'],
-				]);
-				$zapdata = json_decode($zapresponse);
-				if (is_object($zapdata)) {
-					if ($zapdata->status == 'success') {
-						$this->write_debug_log('Hooks sent to Zapier successful.');
+				$allowed_hosts = ['hooks.zapier.com'];
+				$url_parts = parse_url($target_url);
+				$host = isset($url_parts['host']) ? $url_parts['host'] : '';
+
+				if (in_array($host, $allowed_hosts, true)) {
+					$zapresponse = $this->http($target_url, [
+						'id'			=> $json->fraudlabspro_id,
+						'date_created'	=> gmdate('Y-m-d H:i:s'),
+						'flp_status'	=> $json->fraudlabspro_status,
+						'full_name'		=> $data['firstname'] . ' ' . $data['lastname'],
+						'email'			=> $data['email'],
+						'order_id'		=> $data['order_id'],
+					]);
+					$zapdata = json_decode($zapresponse);
+					if (is_object($zapdata)) {
+						if ($zapdata->status == 'success') {
+							$this->write_debug_log('Hooks sent to Zapier successful.');
+						} else {
+							$this->write_debug_log('Hooks sent to Zapier failed.');
+						}
 					} else {
-						$this->write_debug_log('Hooks sent to Zapier failed.');
+						$this->write_debug_log('Failed in sending hook to Zapier.');
 					}
 				} else {
-					$this->write_debug_log('Failed in sending hook to Zapier.');
+					$this->write_debug_log('SSRF Prevention: Blocked request to non-whitelisted Zapier URL: ' . $target_url);
 				}
 			} else {
 				$this->write_debug_log('Zapier target_url not found.');
@@ -320,10 +328,13 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 	private function hashIt(string $s): string {
 		$hash = 'fraudlabspro_' . $s;
 
-		for ($i = 0; $i < 65536; $i++)
+		for ($i = 0; $i < 65536; $i++) {
 			$hash = sha1('fraudlabspro_' . $hash);
+		}
 
-		return $hash;
+		$hash2 = hash('sha256', $hash);
+
+		return $hash2;
 	}
 
 	// Write to debug log to record details of process.

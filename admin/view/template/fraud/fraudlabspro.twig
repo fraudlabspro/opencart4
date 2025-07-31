@@ -196,6 +196,7 @@
         </form>
         <form action="{{ action }}" id="form-purge" method="post">
             <input type="hidden" name="purge" value="true">
+            <input type="hidden" name="user_token" value="{{ user_token }}" />
         </form>
         <script>
 jQuery(document).ready(function($){

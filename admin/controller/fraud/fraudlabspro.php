@@ -23,10 +23,18 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			'href' => $this->url->link('extension/fraudlabspro/fraud/fraudlabspro', 'user_token=' . $this->session->data['user_token'], true)
 		];
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && (isset($this->request->post['purge']))) {
-			$this->db->query("TRUNCATE `" . DB_PREFIX . "fraudlabspro`");
+		$data['user_token'] = $this->session->data['user_token'];
 
-			$this->session->data['success'] = $this->language->get('text_success_delete');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && (isset($this->request->post['purge']))) {
+			if (!$this->user->hasPermission('modify', 'extension/fraudlabspro/fraud/fraudlabspro')) {
+				$this->session->data['error_warning'] = $this->language->get('error_permission');
+			} elseif (!isset($this->request->post['user_token']) || !hash_equals($this->session->data['user_token'], $this->request->post['user_token'])) {
+				$this->session->data['error_warning'] = $this->language->get('error_token');
+			} else {
+				$this->db->query("TRUNCATE `" . DB_PREFIX . "fraudlabspro`");
+
+				$this->session->data['success'] = $this->language->get('text_success_delete');
+			}
 
 			$this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=fraud', true));
 		} elseif (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -236,68 +244,74 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 
 		$this->load->model('extension/fraudlabspro/fraud/fraudlabspro');
 
+		$data['user_token'] = $this->session->data['user_token'];
+
 		// Action of the Approve/Reject/Blacklist button click
 		if (isset($this->request->post['flp_id'])){
-			$flp_status = $this->request->post['new_status'];
-			$feedback_note = $this->request->post['feedback_note'];
-			$note = urlencode($feedback_note);
+			if (!isset($this->request->post['user_token']) || !hash_equals($this->session->data['user_token'], $this->request->post['user_token'])) {
+				$data['error_warning'] = 'Invalid CSRF Token!';
+			} else {
+				$flp_status = $this->request->post['new_status'];
+				$feedback_note = $this->request->post['feedback_note'];
+				$note = urlencode($feedback_note);
 
-			// Feedback FLP status to server
-			$fraud_fraudlabspro_key = $this->config->get('fraud_fraudlabspro_key');
+				// Feedback FLP status to server
+				$fraud_fraudlabspro_key = $this->config->get('fraud_fraudlabspro_key');
 
-			$request = [
-				'key'			=> $fraud_fraudlabspro_key,
-				'action'		=> $flp_status,
-				'id'			=> $this->request->post['flp_id'],
-				'note'			=> $note,
-				'format'		=> 'json',
-				'source'		=> 'opencart',
-				'triggered_by'	=> 'manual'
-			];
+				$request = [
+					'key'			=> $fraud_fraudlabspro_key,
+					'action'		=> $flp_status,
+					'id'			=> $this->request->post['flp_id'],
+					'note'			=> $note,
+					'format'		=> 'json',
+					'source'		=> 'opencart',
+					'triggered_by'	=> 'manual'
+				];
 
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/feedback');
-			curl_setopt($ch, CURLOPT_FAILONERROR, false);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-			curl_setopt($ch, CURLOPT_HTTP_VERSION, '1.1');
-			curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, (is_array($request)) ? http_build_query($request) : $request);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/feedback');
+				curl_setopt($ch, CURLOPT_FAILONERROR, false);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+				curl_setopt($ch, CURLOPT_HTTP_VERSION, '1.1');
+				curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, (is_array($request)) ? http_build_query($request) : $request);
 
-			$response = curl_exec($ch);
+				$response = curl_exec($ch);
 
-			curl_close($ch);
+				curl_close($ch);
 
-			if (strtolower($flp_status) == 'reject_blacklist'){
-				$flp_status = "REJECT";
-			}
-			$data['flp_status'] = $flp_status;
+				if (strtolower($flp_status) == 'reject_blacklist'){
+					$flp_status = "REJECT";
+				}
+				$data['flp_status'] = $flp_status;
 
-			// Update fraud status into table
-			$this->db->query("UPDATE `" . DB_PREFIX . "fraudlabspro` SET fraudlabspro_status = '" . $this->db->escape((string)$flp_status) . "' WHERE order_id = " . (int)$this->request->get['order_id']);
+				// Update fraud status into table
+				$this->db->query("UPDATE `" . DB_PREFIX . "fraudlabspro` SET fraudlabspro_status = '" . $this->db->escape((string)$flp_status) . "' WHERE order_id = " . (int)$this->request->get['order_id']);
 
-			// Update history record
-			if (strtolower($flp_status) == 'approve'){
-				$data_temp = array(
-					'order_status_id'=>$this->config->get('fraud_fraudlabspro_approve_status_id'),
-					'notify'=>0,
-					'comment'=>'Approved using FraudLabs Pro.'
-				);
+				// Update history record
+				if (strtolower($flp_status) == 'approve'){
+					$data_temp = array(
+						'order_status_id'=>$this->config->get('fraud_fraudlabspro_approve_status_id'),
+						'notify'=>0,
+						'comment'=>'Approved using FraudLabs Pro.'
+					);
 
-				$this->model_extension_fraudlabspro_fraud_fraudlabspro->addOrderHistory($this->request->get['order_id'], $data_temp);
-			}
-			else if (strtolower($flp_status) == "reject"){
-				$data_temp = array(
-					'order_status_id'=>$this->config->get('fraud_fraudlabspro_reject_status_id'),
-					'notify'=>0,
-					'comment'=>'Rejected using FraudLabs Pro.'
-				);
+					$this->model_extension_fraudlabspro_fraud_fraudlabspro->addOrderHistory($this->request->get['order_id'], $data_temp);
+				}
+				else if (strtolower($flp_status) == "reject"){
+					$data_temp = array(
+						'order_status_id'=>$this->config->get('fraud_fraudlabspro_reject_status_id'),
+						'notify'=>0,
+						'comment'=>'Rejected using FraudLabs Pro.'
+					);
 
-				$this->model_extension_fraudlabspro_fraud_fraudlabspro->addOrderHistory($this->request->get['order_id'], $data_temp);
+					$this->model_extension_fraudlabspro_fraud_fraudlabspro->addOrderHistory($this->request->get['order_id'], $data_temp);
+				}
 			}
 		}
 
@@ -350,9 +364,12 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			}
 
 			if ($fraud_info['ip_country']) {
-				$data['flp_ip_location'] = $fraud_info['ip_country'] . ", " . $fraud_info['ip_region'] . ", " . $fraud_info['ip_city'] . " <a href=\"https://www.geolocation.com/" . $fraud_info['ip_address'] . "\" target=\"_blank\">[Map]</a>";
+				$data['flp_ip_country'] = $fraud_info['ip_country'];
+				$data['flp_ip_region'] = $fraud_info['ip_region'];
+				$data['flp_ip_city'] = $fraud_info['ip_city'];
+				$data['flp_ip_address'] = $fraud_info['ip_address'];
 			} else {
-				$data['flp_ip_location'] = '-';
+				$data['flp_ip_country'] = '';
 			}
 
 			if ($fraud_info['distance_in_mile'] != '-') {
