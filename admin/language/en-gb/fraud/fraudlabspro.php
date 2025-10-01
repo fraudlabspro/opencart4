@@ -26,7 +26,7 @@ $_['text_email_blacklist']       = 'Email in Blacklist';
 $_['text_phone_verify']          = 'Phone Verified';
 $_['text_score']                 = 'FraudLabs Pro Score';
 $_['text_status']                = 'FraudLabs Pro Status';
-$_['text_message']               = 'Message';
+$_['text_message']               = 'Error Message';
 $_['text_transaction_id']        = 'Transaction ID';
 $_['text_rules']                 = 'Triggered Rules';
 $_['text_credits']               = 'Credit Balance';
@@ -35,6 +35,9 @@ $_['text_flp_upgrade']           = '<a href="https://www.fraudlabspro.com/pricin
 $_['text_zapier_approve']        = 'Approve Status';
 $_['text_zapier_review']         = 'Review Status';
 $_['text_zapier_reject']         = 'Reject Status';
+$_['text_section_ip']            = 'IP Geolocation';
+$_['text_section_validate']      = 'Validation Information';
+$_['text_section_other']         = 'Others';
 
 // Entry
 $_['entry_status']               = 'Status';
@@ -66,8 +69,9 @@ $_['help_ip_usage_type']         = 'Usage type of the IP address. E.g, ISP, Comm
 $_['help_ip_time_zone']          = 'Time zone of the IP address.';
 $_['help_ip_location']           = 'Location of the IP address.';
 $_['help_ip_distance']           = 'Distance from IP address to Billing Location.';
-$_['help_ip_latitude']           = 'Latitude of the IP address.';
-$_['help_ip_longitude']          = 'Longitude of the IP address.';
+//$_['help_ip_latitude']           = 'Latitude of the IP address.';
+//$_['help_ip_longitude']          = 'Longitude of the IP address.';
+$_['help_ip_coordinates']          = 'Latitude and Longitude of the IP address.';
 $_['help_risk_country']          = 'Whether IP address country is in the latest high risk country list.';
 $_['help_free_email']            = 'Whether e-mail is from free e-mail provider.';
 $_['help_ship_forward']          = 'Whether shipping address is a freight forwarder address.';
@@ -81,6 +85,7 @@ $_['help_transaction_id']        = 'Unique identifier for a transaction screened
 $_['help_credits']               = 'Balance of the credits available after this transaction.';
 $_['help_rules']                 = 'FraudLabs Pro Rules triggered.';
 $_['help_sync_status']           = 'Automatically synchronize Completed order with FraudLabs Pro Approve status and Canceled order with FraudLabs Pro Reject status.';
+$_['help_score']                 = 'Fraud score of the order - High Risk (100) - Low Risk (0).';
 
 // Error
 $_['error_permission']           = 'Warning: You do not have permission to modify FraudLabs Pro settings!';

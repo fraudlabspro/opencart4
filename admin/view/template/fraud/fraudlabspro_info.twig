@@ -1,104 +1,142 @@
-<table class="table table-bordered">
-  <tr>
-    <td style="text-align:center; background-color:#ab1b1c; border:1px solid #ab1b1c;" colspan="2"><img src="https://www.fraudlabspro.com/images/logo_200.png" alt="FraudLabs Pro" /></td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_transaction_id }}">{{ text_transaction_id }}</span></td>
-    <td><a href="https://www.fraudlabspro.com/merchant/transaction-details/{{ flp_id }}/" target="_blank">{{ flp_id }}</a></td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_score }}">{{ text_score }}</span></td>
-    <td><img class="img-responsive" alt="" src="//fraudlabspro.hexa-soft.com/images/fraudscore/fraudlabsproscore{{ flp_score }}.png" /></td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_status }}">{{ text_status }}</span></td>
-    <td id="flp_status"><span style="font-weight:bold; color: {% if flp_status|lower == 'approve' %} #5cb85c {% elseif flp_status|lower == 'review' %} #f0ad4e {% else %} #d9534f {% endif %};">{{ flp_status|e }}</span></td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_address }}">{{ text_ip_address }}</span></td>
-    <td>{{ flp_ip_address|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_location }}">{{ text_ip_location }}</span></td>
-    <td>
-      {% if flp_ip_country %}
-        {{ flp_ip_country|e }}, {{ flp_ip_region|e }}, {{ flp_ip_city|e }} <a href="https://www.geolocation.com/{{ flp_ip_address|e('html_attr') }}" target="_blank">[Map]</a>
-      {% else %}
-        -
-      {% endif %}
-    </td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_latitude }}">{{ text_ip_latitude }}</span></td>
-    <td>{{ flp_ip_latitude|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_longitude }}">{{ text_ip_longitude }}</span></td>
-    <td>{{ flp_ip_longitude|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_distance }}">{{ text_ip_distance }}</span></td>
-    <td>{{ flp_ip_distance|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_usage_type }}">{{ text_ip_usage_type }}</span></td>
-    <td>{{ flp_ip_usage_type|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_time_zone }}">{{ text_ip_time_zone }}</span></td>
-    <td>{{ flp_ip_time_zone|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_free_email }}">{{ text_free_email }}</span></td>
-    <td>{{ flp_free_email|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ship_forward }}">{{ text_ship_forward }}</span></td>
-    <td>{{ flp_ship_forward|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_using_proxy }}">{{ text_using_proxy }}</span></td>
-    <td>{{ flp_using_proxy|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_ip_blacklist }}">{{ text_ip_blacklist }}</span></td>
-    <td>{{ flp_ip_blacklist|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_email_blacklist }}">{{ text_email_blacklist }}</span></td>
-    <td>{{ flp_email_blacklist|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_phone_verify }}">{{ text_phone_verify }}</span></td>
-    <td>{{ flp_phone_verify|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_rules }}">{{ text_rules }}</span></td>
-    <td>{{ flp_rules|e }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_credits }}">{{ text_credits }}</span></td>
-    <td>{{ flp_credits|e }} {{ text_flp_upgrade }}</td>
-  </tr>
-  <tr>
-    <td><span data-toggle="tooltip" data-container="#tab-general" title="{{ help_message }}">{{ text_message }}</span></td>
-    <td>{{ flp_message|e }}</td>
-  </tr>
 
-  {% if flp_status|lower == 'review' %}
-  <tr style="background-color: #eee;">
-    <td id="flp_action" colspan="2">
-      <form id="review-action" method="post">
-        <div align="center">
-          <button type="button" id="button-flp-approve" class="btn btn-success" style="min-width:100px;"><i class="fas fa-check"></i> Approve</button>
-          <button type="button" id="button-flp-reject" class="btn btn-danger" style="min-width:100px;"><i class="fas fa-times"></i> Reject</button>
-          <button type="button" id="button-flp-reject-blacklist" class="btn" style="min-width:100px; background:#666; color:#fff;" title="Upon clicking the blacklist button, this order will be rejected and the records will be blacklisted."><i class="fas fa-exclamation-circle"></i> Blacklist</button>
+<div style="border:1px solid #dedede; margin-bottom:1.5rem;">
+    <div style="margin-bottom:1.5rem;padding:0.5rem;text-align:center; background-color:#ab1b1c; border:1px solid #ab1b1c;" colspan="2"><img src="https://www.fraudlabspro.com/images/logo_200.png" alt="FraudLabs Pro" width="170" height="31" /></div>
+    <div style="text-align:center;margin-bottom:1.5rem;">
+        <p style="font-size:0.9rem;font-weight:600;margin-bottom: 0.5rem;">{{ text_score }} <i data-bs-toggle="tooltip" data-container="#tab-general" data-bs-title="{{ help_score }}" class="fa-solid fa-circle-question text-secondary"></i></p>
+        <img class="img-responsive" width="180" alt="" src="//fraudlabspro.hexa-soft.com/images/fraudscore/fraudlabsproscore{{ flp_score }}.png" />
+    </div>
+    <div class="row text-center mb-3">
+        <div class="col">
+            <span style="font-size:0.9rem;font-weight:600;">{{ text_transaction_id }}</span>
+            <br>
+            <span style="font-size:1rem;"><a href="https://www.fraudlabspro.com/merchant/transaction-details/{{ flp_id }}/" target="_blank">{{ flp_id }}</a></span>
         </div>
-        <input type="hidden" id="flp_id" name="flp_id" value="{{ flp_id }}" />
-        <input type="hidden" id="new_status" name="new_status" value="" />
-        <input type="hidden" id="feedback_note" name="feedback_note" value="" />
-        <input type="hidden" name="user_token" value="{{ user_token }}" />
-      </form>
+        <div class="col">
+            <span style="font-size:0.9rem;font-weight:600;">{{ text_status }} <i data-bs-toggle="tooltip" data-container="#tab-general" data-bs-title="{{ help_status }}" class="fa-solid fa-circle-question text-secondary" ></i></span>
+            <br>
+            <span id="flp_status" style="font-size:1rem;font-weight:bold; color: {% if flp_status|lower == 'approve' %} #5cb85c {% elseif flp_status|lower == 'review' %} #f0ad4e {% else %} #d9534f {% endif %};">{{ flp_status|e }}</span>
+        </div>
+        <div class="col">
+            <span style="font-size:0.9rem;font-weight:600;">{{ text_credits }}</span>
+            <br>
+            <span <span style="font-size:1rem;">{{ flp_credits|e }} {{ text_flp_upgrade }}</span>
+        </div>
+    </div>
+    <div class="row mb-3 mx-2" style="position:unset;">
+        <div class="col">
+            <div class="card h-100 mb-3">
+                <div class="card-header" style="background:none;font-weight:600;font-size:0.9rem;border-bottom:none;margin-bottom:none;">{{ text_section_ip }}</div>
+                <div class="card-body" style="padding-top:0;">
+                    <table class="table table-borderless mb-0">
+                    <tr>
+                        <td><span>{{ text_ip_address }}</span></td>
+                        <td>{{ flp_ip_address|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_ip_location }}</span></td>
+                        <td>
+                        {% if flp_ip_country %}
+                        {{ flp_ip_country|e }}, {{ flp_ip_region|e }}, {{ flp_ip_city|e }} <a href="https://www.geolocation.com/{{ flp_ip_address|e('html_attr') }}" target="_blank">[Map]</a>
+                        {% else %}
+                        -
+                        {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span>IP Coordinates <i data-bs-toggle="tooltip" data-container="#tab-general" data-bs-title="{{ help_ip_coordinates }}" class="fa-solid fa-circle-question text-secondary"></i></span></td>
+                        <td>{{ flp_ip_latitude|e }}, {{ flp_ip_longitude|e }}</td>
+                        </tr>
+                        <tr>
+                        <td><span>{{ text_ip_distance }}</span></td>
+                        <td>{{ flp_ip_distance|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_ip_usage_type }} <i data-bs-toggle="tooltip" data-container="#tab-general" data-bs-title="{{ help_ip_usage_type }}" class="fa-solid fa-circle-question text-secondary"></i></span></td>
+                        <td>{{ flp_ip_usage_type|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_ip_time_zone }}</span></td>
+                        <td>{{ flp_ip_time_zone|e }}</td>
+                    </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 mb-3">
+                <div class="card-header" style="background:none;font-weight:600;font-size:0.9rem;border-bottom:none;margin-bottom:none;">{{ text_section_validate }}</div>
+                <div class="card-body" style="padding-top:0;">
+                    <table class="table table-borderless mb-0">
+                    <tr>
+                        <td><span>{{ text_free_email }}</span></td>
+                        <td>{{ flp_free_email|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_ship_forward }} <i data-bs-toggle="tooltip" data-container="#tab-general" data-bs-title="{{ help_ship_forward }}" class="fa-solid fa-circle-question text-secondary"></i></span></td>
+                        <td>{{ flp_ship_forward|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_using_proxy }} <i data-bs-toggle="tooltip" data-container="#tab-general" data-bs-title="{{ help_using_proxy }}" class="fa-solid fa-circle-question text-secondary"></i></span></td>
+                        <td>{{ flp_using_proxy|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_ip_blacklist }}</span></td>
+                        <td>{{ flp_ip_blacklist|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_email_blacklist }}</span></td>
+                        <td>{{ flp_email_blacklist|e }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_phone_verify }}</span></td>
+                        <td>{{ flp_phone_verify|e }}</td>
+                    </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3 mx-2" style="position:unset;">
+        <div class="col">
+            <div class="card">
+                <div class="card-header" style="background:none;font-weight:600;font-size:0.9rem;border-bottom:none;margin-bottom:none;">{{ text_section_other }}</div>
+                <div class="card-body" style="padding-top:0;">
+                    <table class="table table-borderless mb-0">
+                    <tr>
+                        <td width="18%"><span>{{ text_rules }} <i data-bs-toggle="tooltip" data-container="#tab-general" data-bs-title="{{ help_rules }}" class="fa-solid fa-circle-question text-secondary"></i></span></td>
+                        <td>{{ flp_rules }}</td>
+                    </tr>
+                    <tr>
+                        <td><span>{{ text_message }}</span></td>
+                        <td>{{ flp_message|e }}</td>
+                    </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-4 mb-4">
+        Please login to <a href="https://www.fraudlabspro.com/merchant/transaction-details/{{ flp_id }}/" target="_blank">FraudLabs Pro Merchant Area</a> for more information about this order.
+    </div>
+
+    {% if flp_status|lower == 'review' %}
+    <table class="table table-borderless mb-4">
+        <tr style="background-color: #eee;">
+            <td id="flp_action" colspan="2">
+            <form id="review-action" method="post">
+            <div align="center">
+                <button type="button" id="button-flp-approve" class="btn btn-success" style="min-width:100px;"><i class="fas fa-check"></i> Approve</button>
+                <button type="button" id="button-flp-reject" class="btn btn-danger" style="min-width:100px;"><i class="fas fa-times"></i> Reject</button>
+                <button type="button" id="button-flp-reject-blacklist" class="btn" style="min-width:100px; background:#666; color:#fff;" data-bs-toggle="tooltip" title="Upon clicking the blacklist button, this order will be rejected and the records will be blacklisted."><i class="fas fa-exclamation-circle"></i> Blacklist</button>
+            </div>
+            <input type="hidden" id="flp_id" name="flp_id" value="{{ flp_id }}" />
+            <input type="hidden" id="new_status" name="new_status" value="" />
+            <input type="hidden" id="feedback_note" name="feedback_note" value="" />
+            <input type="hidden" name="user_token" value="{{ user_token }}" />
+        </form>
 
       <script>
         $(document).ready(function(){
@@ -120,12 +158,17 @@
                 $("#review-action").submit();
               }
           });
+
+         // Dispose existing tooltips and re-init them properly
+            $('[data-bs-toggle="tooltip"]').tooltip('dispose').tooltip({
+                trigger: 'hover focus',
+                container: 'body'
+            });
         });
       </script>
     </td>
   </tr>
+  </table>
   {% endif %}
-</table>
-<div>
-    Please login to <a href="https://www.fraudlabspro.com/merchant/transaction-details/{{ flp_id }}/" target="_blank">FraudLabs Pro Merchant Area</a> for more information about this order.
+
 </div>

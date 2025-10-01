@@ -166,7 +166,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.6.2';
+		$request['source_version'] = '4.0.7.0';
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/screen');
@@ -192,15 +192,15 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 				is_high_risk_country = '',
 				distance_in_km = '" . $this->db->escape(($json->billing_address->ip_distance_in_km) ?? '') . "',
 				distance_in_mile = '" . $this->db->escape(($json->billing_address->ip_distance_in_mile) ?? '') . "',
-				ip_country = '" . $this->db->escape($json->ip_geolocation->country_code) . "',
-				ip_region = '" . $this->db->escape($json->ip_geolocation->region) . "',
-				ip_city = '" . $this->db->escape($json->ip_geolocation->city) . "',
-				ip_continent = '" . $this->db->escape($json->ip_geolocation->continent) . "',
-				ip_latitude = '" . $this->db->escape($json->ip_geolocation->latitude) . "',
-				ip_longitude = '" . $this->db->escape($json->ip_geolocation->longitude) . "',
-				ip_timezone = '" . $this->db->escape($json->ip_geolocation->timezone) . "',
-				ip_elevation = '" . $this->db->escape($json->ip_geolocation->elevation) . "',
-				ip_domain = '" . $this->db->escape($json->ip_geolocation->domain) . "',
+				ip_country = '" . $this->db->escape(($json->ip_geolocation->country_code) ?? '') . "',
+				ip_region = '" . $this->db->escape(($json->ip_geolocation->region) ?? '') . "',
+				ip_city = '" . $this->db->escape(($json->ip_geolocation->city) ?? '') . "',
+				ip_continent = '" . $this->db->escape(($json->ip_geolocation->continent) ?? '') . "',
+				ip_latitude = '" . $this->db->escape(($json->ip_geolocation->latitude) ?? '') . "',
+				ip_longitude = '" . $this->db->escape(($json->ip_geolocation->longitude) ?? '') . "',
+				ip_timezone = '" . $this->db->escape(($json->ip_geolocation->timezone) ?? '') . "',
+				ip_elevation = '" . $this->db->escape(($json->ip_geolocation->elevation) ?? '') . "',
+				ip_domain = '" . $this->db->escape(($json->ip_geolocation->domain) ?? '') . "',
 				ip_mobile_mnc = '" . $this->db->escape(($json->ip_geolocation->mobile_mnc) ?? '') . "',
 				ip_mobile_mcc = '" . $this->db->escape(($json->ip_geolocation->mobile_mcc) ?? '') . "',
 				ip_mobile_brand = '" . $this->db->escape(($json->ip_geolocation->mobile_brand) ?? '') . "',

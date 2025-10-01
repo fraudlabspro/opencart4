@@ -459,7 +459,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			}
 
 			if (strpos($plan_name, 'Micro')) {
-				$data['flp_rules'] = '<span style="color:orange">Available for <a href="https://www.fraudlabspro.com/pricing" target="_blank">Mini plan</a> onward. Please <a href="https://www.fraudlabspro.com/merchant/login" target="_blank">upgrade</a>.</span>';
+				$data['flp_rules'] = '<span style="color:orange">Available for Mini plan onward. Please <a href="https://www.fraudlabspro.com/merchant/login" target="_blank">upgrade</a>.</span>';
 			} elseif ($fraud_info['fraudlabspro_rules']) {
 				$data['flp_rules'] = $fraud_info['fraudlabspro_rules'];
 			} else {
