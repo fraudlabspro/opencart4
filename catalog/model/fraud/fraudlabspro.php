@@ -130,6 +130,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['ip_forwarded'] = $ip_forwarded;
 		$request['first_name'] = $data['firstname'];
 		$request['last_name'] = $data['lastname'];
+		$request['bill_to'] = $data['payment_company'] ? $data['payment_company'] : $data['shipping_company'];
 		$request['bill_addr'] = $data['payment_address_1'] ? $data['payment_address_1'] : $data['shipping_address_1'];
 		$request['bill_city'] = $data['payment_city'] ? $data['payment_city'] : $data['shipping_city'];
 		$request['bill_state'] = $data['payment_zone'] ? $data['payment_zone'] : $data['shipping_zone'];
@@ -166,7 +167,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Model {
 		$request['coupon_type'] = $coupon_type;
 		$request['format'] = 'json';
 		$request['source'] = 'opencart';
-		$request['source_version'] = '4.0.7.0';
+		$request['source_version'] = '4.0.8.0';
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/order/screen');
