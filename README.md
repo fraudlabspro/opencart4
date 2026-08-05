@@ -1,5 +1,5 @@
 # FraudLabs Pro Fraud Prevention OpenCart extension
-FraudLabs Pro Fraud Prevention extension to help merchants to screen the order transactions for payment fraud. Its comprehensive and advanced algorithm engines validate all elements such as geolocation, anonymous proxy, email address, blacklist record, credit card BIN, transaction velocity and many more to pinpoint fraud orders accurately.
+FraudLabs Pro Fraud Prevention extension to help merchants to screen the order transactions for payment fraud. Its comprehensive and advanced algorithm engines validate all elements such as geolocation, anonymous proxy, email address, blacklist record, credit card BIN, transaction velocity and many more to pinpoint fraud orders accurately. FraudLabs Pro extension also help merchants to screen the user transaction for Account Takeover Fraud. It will detect all possibles fraud traits based on the elements such as IP address, email address, and personal details.
 
 Free Micro Plan available with 500 validations per month.
 

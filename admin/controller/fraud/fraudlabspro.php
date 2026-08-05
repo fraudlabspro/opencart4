@@ -220,15 +220,46 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 		$this->model_extension_fraudlabspro_fraud_fraudlabspro->install();
 
 		$this->load->model('setting/event');
-		$event = [
-			'code' => 'flp_sync_order_change',
-			'trigger' => 'catalog/model/checkout/order/addHistory/after',
-			'action' => 'extension/fraudlabspro/fraud/fraudlabspro',
-			'description' => 'Event to sync OpenCart order status with FraudLabs Pro status',
-			'sort_order' => 1,
-			'status' => true
+		$events = [
+			[
+				'code' => 'flp_sync_order_change',
+				'trigger' => 'catalog/model/checkout/order/addHistory/after',
+				'action' => 'extension/fraudlabspro/fraud/fraudlabspro',
+				'description' => 'Event to sync OpenCart order status with FraudLabs Pro status',
+				'sort_order' => 1,
+				'status' => true
+			],
+			[
+				'code'        => 'flp_detect_login',
+				'trigger'     => 'catalog/controller/account/login.login/before',
+				'action'      => 'extension/fraudlabspro/event/fraudlabspro.beforeLogin',
+				'description' => 'Event to detect OpenCart login with FraudLabs Pro API',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_detect_register',
+				'trigger'     => 'catalog/controller/account/register.save/before',
+				'action'      => 'extension/fraudlabspro/event/fraudlabspro.beforeRegister',
+				'description' => 'Event to detect OpenCart registration with FraudLabs Pro API',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_detect_changepassword',
+				'trigger'     => 'catalog/controller/account/password.save/before',
+				'action'      => 'extension/fraudlabspro/event/fraudlabspro.beforeUpdatePassword',
+				'description' => 'Event to detect OpenCart registration with FraudLabs Pro API',
+				'sort_order'  => 1,
+				'status'      => true
+			],
 		];
-		$this->model_setting_event->addEvent($event);
+
+		foreach ($events as $event) {
+			if (!$this->model_setting_event->getEventByCode($event['code'])) {
+				$this->model_setting_event->addEvent($event);
+			}
+		}
 	}
 
 	public function uninstall(): void {
@@ -236,7 +267,10 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 		$this->model_extension_fraudlabspro_fraud_fraudlabspro->uninstall();
 
 		$this->load->model('setting/event');
-		$this->model_setting_event->deleteEventByCode('flp_sync_order_change');
+		// $this->model_setting_event->deleteEventByCode('flp_sync_order_change');
+		foreach (['flp_sync_order_change', 'flp_detect_login', 'flp_detect_register'] as $code) {
+			$this->model_setting_event->deleteEventByCode($code);
+		}
 	}
 
 	public function order(): string {
