@@ -3,7 +3,7 @@ namespace Opencart\Catalog\Controller\Extension\Fraudlabspro\Event;
 
 class Fraudlabspro extends \Opencart\System\Engine\Controller {
     public function beforeLogin(string &$route, array &$args, mixed &$output = null): void {
-        if (!$this->config->get('fraud_fraudlabspro_status') || !$this->config->get('fraud_fraudlabspro_key')) {
+        if (!$this->config->get('fraud_fraudlabspro_status') || !$this->config->get('fraud_fraudlabspro_enable_ato') || !$this->config->get('fraud_fraudlabspro_key')) {
             return;
         }
 
@@ -43,7 +43,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			if (isset($json->user_transaction_status) && $json->user_transaction_status === 'REJECT') {
 				$rejection = [
 					'error' => [
-						'warning' => $this->language->get('error_login')
+						'warning' => $this->language->get('error_login_flp_reject')
 					]
 				];
 

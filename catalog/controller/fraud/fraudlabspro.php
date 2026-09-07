@@ -62,4 +62,19 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			}
 		}
 	}
+	
+	public function injectLoginJs(string &$route, array &$args, string &$output): void {
+		if (!$this->config->get('fraud_fraudlabspro_status')) {
+			return;
+		}
+		if ($this->config->get('fraud_fraudlabspro_enable_ato')) {
+			$data['atoTok'] = "";
+			if ($this->config->get('fraud_fraudlabspro_ato_tok')) {
+				$data['atoTok'] = "?tok=" . $this->config->get('fraud_fraudlabspro_ato_tok');
+			}
+			$scriptHtml = $this->load->view('extension/fraudlabspro/fraud/login_script', $data);
+
+			$output = str_replace('</body>', $scriptHtml . '</body>', $output);
+		}
+    }
 }

@@ -183,6 +183,12 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			$data['fraud_fraudlabspro_sync_status'] = $this->config->get('fraud_fraudlabspro_sync_status');
 		}
 
+		if (isset($this->request->post['fraud_fraudlabspro_enable_ato'])) {
+			$data['fraud_fraudlabspro_enable_ato'] = $this->request->post['fraud_fraudlabspro_enable_ato'];
+		} else {
+			$data['fraud_fraudlabspro_enable_ato'] = $this->config->get('fraud_fraudlabspro_enable_ato');
+		}
+
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
@@ -205,6 +211,34 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 
 		if (!$json) {
 			$this->load->model('setting/setting');
+			if (isset($this->request->post['fraud_fraudlabspro_enable_ato'])) {
+				$plan_request_ato = [
+					'key'    => $this->request->post['fraud_fraudlabspro_key'],
+					'format' => 'json',
+					'src'    => 'OpenCart',
+					'ato'    => 'enable',
+				];
+				file_put_contents("kw-debug.log", var_export($plan_request_ato, true) . PHP_EOL, FILE_APPEND);
+				$curl = curl_init();
+				curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/plan/result?' . http_build_query($plan_request_ato));
+				curl_setopt($curl, CURLOPT_HEADER, 0);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
+				curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+
+				$plan_response = curl_exec($curl);
+
+				curl_close($curl);
+
+				if (is_null($plan_json = json_decode($plan_response)) === FALSE) {
+					file_put_contents("kw-debug.log", var_export($plan_json, true) . PHP_EOL, FILE_APPEND);
+					$ato_tok = $plan_json->adv_agent_tok;
+					if ($ato_tok) {
+						$this->request->post['fraud_fraudlabspro_ato_tok'] = $ato_tok;
+					}
+				}
+			}
 
 			$this->model_setting_setting->editSetting('fraud_fraudlabspro', $this->request->post);
 

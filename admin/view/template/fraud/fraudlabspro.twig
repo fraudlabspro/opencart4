@@ -179,6 +179,20 @@
           <fieldset>
             <legend>Extension Settings</legend>
             <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="input-debug-status">{{ text_ato_enable }}</label>
+              <div class="col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    {% if fraud_fraudlabspro_enable_ato %}
+                    <input type="checkbox" name="fraud_fraudlabspro_enable_ato" value="1" checked="checked" />
+                    {% else %}
+                    <input type="checkbox" name="fraud_fraudlabspro_enable_ato" value="1" />
+                    {% endif %}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
               <label class="col-sm-2 col-form-label" for="input-debug-status"><span data-toggle="tooltip" title="{{ help_debug_status }}">{{ entry_debug }} <i class="fas fa-question-circle"></i></span></label>
               <div class="col-sm-10">
                 <select name="fraud_fraudlabspro_debug_status" id="input-debug-status" class="form-select">

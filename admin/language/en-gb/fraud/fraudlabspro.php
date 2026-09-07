@@ -35,6 +35,7 @@ $_['text_flp_upgrade']           = '<a href="https://www.fraudlabspro.com/pricin
 $_['text_zapier_approve']        = 'Approve Status';
 $_['text_zapier_review']         = 'Review Status';
 $_['text_zapier_reject']         = 'Reject Status';
+$_['text_ato_enable']            = 'Enable Account Takeover (ATO) Fraud Prevention';
 $_['text_section_ip']            = 'IP Geolocation';
 $_['text_section_validate']      = 'Validation Information';
 $_['text_section_other']         = 'Others';
