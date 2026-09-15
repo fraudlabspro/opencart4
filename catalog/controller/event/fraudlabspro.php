@@ -16,7 +16,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
         } else {
-            $ip = oc_get_ip();
+            $ip = $this->get_ip();
         }
 
         $this->load->model('account/customer');
@@ -75,7 +75,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
         } else {
-            $ip = oc_get_ip();
+            $ip = $this->get_ip();
         }
 
         $flp_payload = [
@@ -123,7 +123,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
         } else {
-            $ip = oc_get_ip();
+            $ip = $this->get_ip();
         }
 		
 		$this->load->model('account/customer');
@@ -234,5 +234,29 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 		}
 
 		return false;
+	}
+	
+	private function get_ip(): string {
+		$headers = [
+			'HTTP_CF_CONNECTING_IP', // CloudFlare
+			'HTTP_X_FORWARDED_FOR',  // AWS LB and other reverse-proxies
+			'HTTP_X_REAL_IP',
+			'HTTP_X_CLIENT_IP',
+			'HTTP_CLIENT_IP',
+			'HTTP_X_CLUSTER_CLIENT_IP',
+		];
+
+		foreach ($headers as $header) {
+			if (array_key_exists($header, $_SERVER)) {
+				$ip = $_SERVER[$header];
+
+				// This line might or might not be used.
+				$ip = trim(explode(',', $ip)[0]);
+
+				return $ip;
+			}
+		}
+
+		return $_SERVER['REMOTE_ADDR'];
 	}
 }

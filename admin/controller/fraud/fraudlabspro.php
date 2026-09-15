@@ -218,7 +218,6 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 					'src'    => 'OpenCart',
 					'ato'    => 'enable',
 				];
-				file_put_contents("kw-debug.log", var_export($plan_request_ato, true) . PHP_EOL, FILE_APPEND);
 				$curl = curl_init();
 				curl_setopt($curl, CURLOPT_URL, 'https://api.fraudlabspro.com/v2/plan/result?' . http_build_query($plan_request_ato));
 				curl_setopt($curl, CURLOPT_HEADER, 0);
@@ -232,7 +231,6 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 				curl_close($curl);
 
 				if (is_null($plan_json = json_decode($plan_response)) === FALSE) {
-					file_put_contents("kw-debug.log", var_export($plan_json, true) . PHP_EOL, FILE_APPEND);
 					$ato_tok = $plan_json->adv_agent_tok;
 					if ($ato_tok) {
 						$this->request->post['fraud_fraudlabspro_ato_tok'] = $ato_tok;
