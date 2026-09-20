@@ -281,7 +281,63 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 				'code'        => 'flp_detect_changepassword',
 				'trigger'     => 'catalog/controller/account/password.save/before',
 				'action'      => 'extension/fraudlabspro/event/fraudlabspro.beforeUpdatePassword',
-				'description' => 'Event to detect OpenCart registration with FraudLabs Pro API',
+				'description' => 'Event to detect OpenCart Password Change with FraudLabs Pro API',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_detect_editaccount',
+				'trigger'     => 'catalog/controller/account/edit.save/before',
+				'action'      => 'extension/fraudlabspro/event/fraudlabspro.beforeEditAccount',
+				'description' => 'Event to detect OpenCart Account Edit with FraudLabs Pro API',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_detect_saveaddress',
+				'trigger'     => 'catalog/controller/account/address.save/before',
+				'action'      => 'extension/fraudlabspro/event/fraudlabspro.beforeSaveAddress',
+				'description' => 'Event to detect OpenCart Address Save with FraudLabs Pro API',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_login_js',
+				'trigger'     => 'catalog/view/account/login/after',
+				'action'      => 'extension/fraudlabspro/fraud/fraudlabspro.injectLoginJs',
+				'description' => 'Inject dynamic JS into login page view',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_register_js',
+				'trigger'     => 'catalog/view/account/register/after',
+				'action'      => 'extension/fraudlabspro/fraud/fraudlabspro.injectLoginJs',
+				'description' => 'Inject dynamic JS into register page view',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_changepassword_js',
+				'trigger'     => 'catalog/view/account/password/after',
+				'action'      => 'extension/fraudlabspro/fraud/fraudlabspro.injectLoginJs',
+				'description' => 'Inject dynamic JS into change password page view',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_editaccount_js',
+				'trigger'     => 'catalog/view/account/edit/after',
+				'action'      => 'extension/fraudlabspro/fraud/fraudlabspro.injectLoginJs',
+				'description' => 'Inject dynamic JS into account edit page view',
+				'sort_order'  => 1,
+				'status'      => true
+			],
+			[
+				'code'        => 'flp_saveaddress_js',
+				'trigger'     => 'catalog/view/account/address/after',
+				'action'      => 'extension/fraudlabspro/fraud/fraudlabspro.injectLoginJs',
+				'description' => 'Inject dynamic JS into address save page view',
 				'sort_order'  => 1,
 				'status'      => true
 			],
@@ -300,7 +356,7 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 
 		$this->load->model('setting/event');
 		// $this->model_setting_event->deleteEventByCode('flp_sync_order_change');
-		foreach (['flp_sync_order_change', 'flp_detect_login', 'flp_detect_register'] as $code) {
+		foreach (['flp_sync_order_change', 'flp_detect_login', 'flp_detect_register', 'flp_detect_changepassword', 'flp_detect_editaccount', 'flp_detect_saveaddress', 'flp_login_js', 'flp_register_js', 'flp_changepassword_js', 'flp_editaccount_js', 'flp_saveaddress_js'] as $code) {
 			$this->model_setting_event->deleteEventByCode($code);
 		}
 	}

@@ -165,6 +165,110 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 			$this->write_debug_log('Transaction for ' . $email . ' data contains invalid value.');
 		}
     }
+	
+    public function beforeEditAccount(string &$route, array &$args, mixed &$output = null): void {
+        if (!$this->config->get('fraud_fraudlabspro_status') || !$this->config->get('fraud_fraudlabspro_key')) {
+            return;
+        }
+		$email = $this->customer->getEmail();
+
+        if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
+            $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
+        } else {
+            $ip = $this->get_ip();
+        }
+		
+		$this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomerByEmail($email);
+
+        $flp_payload = [
+            'key'        => $this->config->get('fraud_fraudlabspro_key'),
+            'email'      => $email,
+            'ip'         => $ip,
+            'first_name' => $customer_info['firstname'] ?? '',
+            'last_name'  => $customer_info['lastname'] ?? '',
+            'phone'      => $customer_info['telephone'] ?? '',
+        ];
+		
+		// FLP Agent Javascript
+		if (isset($_COOKIE['flp_checksum'])) {
+			$flp_checksum = htmlspecialchars($_COOKIE['flp_checksum'], ENT_COMPAT, 'UTF-8');
+			$flp_payload['flp_checksum'] = $flp_checksum;
+		}
+		
+		$response = $this->screen_user($flp_payload);
+
+		if (is_null($json = json_decode($response)) === FALSE) {
+			if (isset($json->user_transaction_status) && $json->user_transaction_status === 'REJECT') {
+				$this->load->language('extension/fraudlabspro/event/fraudlabspro');
+				$rejection = [
+					'error' => [
+						'warning' => $this->language->get('error_edit_account_flp_reject')
+						// 'warning' => "Warning!" // or your own custom message
+					]
+				];
+
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($rejection));
+				$this->response->output();
+				exit;
+			}
+		} else {
+			$this->write_debug_log('Transaction for ' . $email . ' data contains invalid value.');
+		}
+    }
+	
+    public function beforeSaveAddress(string &$route, array &$args, mixed &$output = null): void {
+        if (!$this->config->get('fraud_fraudlabspro_status') || !$this->config->get('fraud_fraudlabspro_key')) {
+            return;
+        }
+		$email = $this->customer->getEmail();
+
+        if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
+            $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
+        } else {
+            $ip = $this->get_ip();
+        }
+		
+		$this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomerByEmail($email);
+
+        $flp_payload = [
+            'key'        => $this->config->get('fraud_fraudlabspro_key'),
+            'email'      => $email,
+            'ip'         => $ip,
+            'first_name' => $customer_info['firstname'] ?? '',
+            'last_name'  => $customer_info['lastname'] ?? '',
+            'phone'      => $customer_info['telephone'] ?? '',
+        ];
+		
+		// FLP Agent Javascript
+		if (isset($_COOKIE['flp_checksum'])) {
+			$flp_checksum = htmlspecialchars($_COOKIE['flp_checksum'], ENT_COMPAT, 'UTF-8');
+			$flp_payload['flp_checksum'] = $flp_checksum;
+		}
+		
+		$response = $this->screen_user($flp_payload);
+
+		if (is_null($json = json_decode($response)) === FALSE) {
+			if (isset($json->user_transaction_status) && $json->user_transaction_status === 'REJECT') {
+				$this->load->language('extension/fraudlabspro/event/fraudlabspro');
+				$rejection = [
+					'error' => [
+						'warning' => $this->language->get('error_save_address_flp_reject')
+						// 'warning' => "Warning!" // or your own custom message
+					]
+				];
+
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($rejection));
+				$this->response->output();
+				exit;
+			}
+		} else {
+			$this->write_debug_log('Transaction for ' . $email . ' data contains invalid value.');
+		}
+    }
 
 	// Write to debug log to record details of process.
 	private function write_debug_log(string $message): int {
