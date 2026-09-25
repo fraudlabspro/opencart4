@@ -355,7 +355,6 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
 		$this->model_extension_fraudlabspro_fraud_fraudlabspro->uninstall();
 
 		$this->load->model('setting/event');
-		// $this->model_setting_event->deleteEventByCode('flp_sync_order_change');
 		foreach (['flp_sync_order_change', 'flp_detect_login', 'flp_detect_register', 'flp_detect_changepassword', 'flp_detect_editaccount', 'flp_detect_saveaddress', 'flp_login_js', 'flp_register_js', 'flp_changepassword_js', 'flp_editaccount_js', 'flp_saveaddress_js'] as $code) {
 			$this->model_setting_event->deleteEventByCode($code);
 		}

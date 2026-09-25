@@ -12,6 +12,12 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         if (!$email) {
             return;
         }
+		
+		$landingPage = $route;
+		// Exclude the part after the dot, e.g. account/login.login
+		if (strpos($landingPage, '.') !== false) {
+			$landingPage = explode('.', $landingPage)[0];
+		}
 
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
@@ -30,6 +36,10 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
             'last_name'  => $customer_info['lastname'] ?? '',
             'phone'      => $customer_info['telephone'] ?? '',
         ];
+		
+		if ($landingPage) {
+			$flp_payload['landing_page'] = $landingPage;
+		}
 		
 		// FLP Agent Javascript
 		if (isset($_COOKIE['flp_checksum'])) {
@@ -71,6 +81,12 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         if (!$email) {
             return;
         }
+		
+		$landingPage = $route;
+		// Exclude the part after the dot, e.g. account/login.login
+		if (strpos($landingPage, '.') !== false) {
+			$landingPage = explode('.', $landingPage)[0];
+		}
 
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
@@ -86,6 +102,10 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
             'last_name'  => $lastname ?? '',
             'phone'      => $telephone ?? '',
         ];
+		
+		if ($landingPage) {
+			$flp_payload['landing_page'] = $landingPage;
+		}
 		
 		// FLP Agent Javascript
 		if (isset($_COOKIE['flp_checksum'])) {
@@ -120,6 +140,16 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         }
 		$email = $this->customer->getEmail();
 
+        if (!$email) {
+            return;
+        }
+		
+		$landingPage = $route;
+		// Exclude the part after the dot, e.g. account/login.login
+		if (strpos($landingPage, '.') !== false) {
+			$landingPage = explode('.', $landingPage)[0];
+		}
+
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
         } else {
@@ -137,6 +167,10 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
             'last_name'  => $customer_info['lastname'] ?? '',
             'phone'      => $customer_info['telephone'] ?? '',
         ];
+		
+		if ($landingPage) {
+			$flp_payload['landing_page'] = $landingPage;
+		}
 		
 		// FLP Agent Javascript
 		if (isset($_COOKIE['flp_checksum'])) {
@@ -172,6 +206,16 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         }
 		$email = $this->customer->getEmail();
 
+        if (!$email) {
+            return;
+        }
+		
+		$landingPage = $route;
+		// Exclude the part after the dot, e.g. account/login.login
+		if (strpos($landingPage, '.') !== false) {
+			$landingPage = explode('.', $landingPage)[0];
+		}
+
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
         } else {
@@ -189,6 +233,10 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
             'last_name'  => $customer_info['lastname'] ?? '',
             'phone'      => $customer_info['telephone'] ?? '',
         ];
+		
+		if ($landingPage) {
+			$flp_payload['landing_page'] = $landingPage;
+		}
 		
 		// FLP Agent Javascript
 		if (isset($_COOKIE['flp_checksum'])) {
@@ -224,6 +272,16 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
         }
 		$email = $this->customer->getEmail();
 
+        if (!$email) {
+            return;
+        }
+		
+		$landingPage = $route;
+		// Exclude the part after the dot, e.g. account/login.login
+		if (strpos($landingPage, '.') !== false) {
+			$landingPage = explode('.', $landingPage)[0];
+		}
+
         if (filter_var($this->config->get('fraud_fraudlabspro_simulate_ip'), FILTER_VALIDATE_IP)) {
             $ip = $this->config->get('fraud_fraudlabspro_simulate_ip');
         } else {
@@ -241,6 +299,10 @@ class Fraudlabspro extends \Opencart\System\Engine\Controller {
             'last_name'  => $customer_info['lastname'] ?? '',
             'phone'      => $customer_info['telephone'] ?? '',
         ];
+		
+		if ($landingPage) {
+			$flp_payload['landing_page'] = $landingPage;
+		}
 		
 		// FLP Agent Javascript
 		if (isset($_COOKIE['flp_checksum'])) {
